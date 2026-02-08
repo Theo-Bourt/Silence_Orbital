@@ -33,5 +33,14 @@ class Player():
         
         return actual_damage
     
-    def heal(self, amount):
-        self.hp = min(self.hp + amount, self.max_hp)
+
+    def oxygen_damage(self):
+        pass
+
+    def upgrade_attack(self):
+        self.amount = 3
+        self.attack = self.attack + self.amount
+    
+    def upgrade_defense(self):
+        self.amount = 5
+        self.defense = self.defense + self.amount

@@ -14,6 +14,7 @@ while player.is_alive and alien.is_alive:
     
     # Le joueur attaque l'alien
     dmg = alien.take_damage(player.attack)
+    
     print(f"{player.name} attaque {alien.name} et inflige {player.attack} dégâts !")
     print(f"{alien.name} a maintenant {alien.hp}/{alien.max_hp} PV.\n")
 
@@ -23,6 +24,7 @@ while player.is_alive and alien.is_alive:
 
     # L'alien attaque le joueur
     dmg_taken = player.take_damage(alien.attack)
+
     print(f"{alien.name} attaque {player.name} et inflige {dmg_taken} dégâts !")
     print(f"{player.name} a maintenant {player.hp}/{player.max_hp} PV.\n")
 
