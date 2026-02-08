@@ -31,6 +31,9 @@ class Space_Station:
     def is_destroyed(self) -> bool:
         return self.wall_hp <=0 or self.oxygen_level <=0
 
+    def get_info_station(self):
+        return f"Mur: {self.wall_hp}/{self.max_wall_hp}\nOxygène: {self.oxygen_level}% (perte: -{self.oxygen_loss}% par tour) "
+
     
 
 
