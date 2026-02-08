@@ -8,6 +8,12 @@ class Space_Station:
         self.oxygen_level=100
         self.oxygen_loss=5
 
+    def repair_wall(self):
+        pass
+
+    def damage_wall():
+        pass
+
     def reinforce_wall(self):
         self.wall_hp += self.WALL_REINFORCEMENT
         self.max_wall_hp += self.WALL_REINFORCEMENT
