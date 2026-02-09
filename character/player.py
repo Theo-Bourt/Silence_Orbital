@@ -35,12 +35,26 @@ class Player():
     
 
     def oxygen_damage(self):
-        pass
+        if self.hp < 25:
+            self.hp -= 10
+        elif self.hp < 50:
+            self.hp -= 5
+        elif self.hp < 75:
+            self.hp -= 3
 
     def upgrade_attack(self):
-        self.amount = 3
-        self.attack = self.attack + self.amount
+        self.amount_attack = 3
+        self.attack = self.attack + self.amount_attack
     
-    def upgrade_defense(self):
+    def upgrade_defense(self): 
         self.amount = 5
         self.defense = self.defense + self.amount
+    
+    def get_info(self):
+        status = "💀"
+
+        if not self.is_alive :
+            return status
+        else:
+            return f"{sta}"
+    
