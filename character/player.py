@@ -51,10 +51,11 @@ class Player():
         self.defense = self.defense + self.amount
     
     def get_info(self):
-        status = "💀"
-
-        if not self.is_alive :
-            return status
-        else:
-            return f"{sta}"
+        status = self.is_alive
+        if status is not self.is_alive:
+            return "💀"
+        else :
+            "✅"
+        return f"{status} {self.name} ({self.player_class.value}) - HP: {self.hp}/{self.max_hp} | ATK: {self.attack} | DEF: {self.defense}"
+    
     
