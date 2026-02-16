@@ -11,7 +11,7 @@ class Space_Station:
         self.oxygen_loss=5
 
     def repair_wall(self):
-        if PlayerClass == "ENGINEER":
+        if PlayerClass == ENGINEER:
             self.wall_hp= self.wall_hp + 15
         else:
             self.wall_hp= self.wall_hp +10
