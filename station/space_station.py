@@ -1,6 +1,6 @@
 from character.player import *
 
-class Space_Station:
+class SpaceStation:
 
     WALL_REINFORCEMENT=30 
 
