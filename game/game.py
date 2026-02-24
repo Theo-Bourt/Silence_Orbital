@@ -54,3 +54,32 @@ class Game:
         amount = player.repair_wall(self.station)
         print(f"{player.name} répare le mur de {amount} PV!")
         print(f"Mur: {self.station.wall_hp}/{self.station.max_wall_hp}")
+
+    def check_game_over(self):
+        if self.station.is_destroyed():
+            self.game_over=True
+            self.victory=False
+            print("GAME OVER! La station a été détruite!")
+            return True
+        
+        if not any(p.is_alive for p in self.player):
+            self.game_over=True
+            self.victory=False
+            print("GAME OVER! Tout l'equipage est mort!")
+            return True
+        
+        if self.current_round >= self.max_rounds:
+            self.game_over=True
+            self.victory=True
+            print("VICTOIRE! Vous avez survécu et sauvé la station!")
+            return True
+        
+        if not any(a.is_alive for a in self.aliens):
+            self.game_over=True
+            self.victory=True
+            print("VICTOIRE! Vous avez tué tous les aliens!")
+            return True
+        
+        return False
+    
+    
