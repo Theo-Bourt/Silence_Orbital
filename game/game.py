@@ -50,61 +50,7 @@ class Game:
         except (ValueError, IndexError):
             print("Cible invalide!")
 
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def _handle_attack(self, player: Player):
-    """Gère l'action Attaque"""
-    alive_aliens = [a for a in self.aliens if a.is_alive]
-
-    if not alive_aliens:
-        print("❌ Aucun extraterrestre à attaquer!")
-        return
-
-    print("\nChoisissez une cible:")
-    for i, alien in enumerate(alive_aliens, 1):
-        print(f"{i}. {alien}")
-
-    try:
-        target = alive_aliens[int(input("Votre choix: ")) - 1]
-    except (ValueError, IndexError):
-        print("❌ Cible invalide!")
-        return
-
-    damage = player.attack_alien(target)
-    print(f"💥 {player.name} inflige {damage} dégâts à {target.name}!")
-
-    if not target.is_alive:
-        print(f"☠️ {target.name} éliminé!")
+    def handle_repair(self,player:Player):
+        amount = player.repair_wall(self.station)
+        print(f"{player.name} répare le mur de {amount} PV!")
+        print(f"Mur: {self.station.wall_hp}/{self.station.max_wall_hp}")
