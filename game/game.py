@@ -82,4 +82,26 @@ class Game:
         
         return False
     
-    
+    def play_round(self):
+        self.current_round += 1
+        self.spawn_aliens()
+        self.display_status()
+        for player in self.player:
+            if player.is_alive:
+                self.player_turn(player)
+        self.aliens_attack()
+
+        self.station.loss_oxygen()
+        print(f"L'ocygen diminue. Niveau actuel:{self.station.oxygen_level}%")
+
+        if self.station.oxygen_level<50:
+            print("ALERTE OXYGENE BAS!")
+            for player in self.player:
+                if player.is_alive:
+                    damage = player.oxygen_damage()
+                    if damage>0:
+                        print(f"{player.name} perd {damage} HP à cause du manque d'oxygène!")
+
+        self.aliens = [a for a in self.aliens if a.is_alive]
+
+        return self.check_game_over()
