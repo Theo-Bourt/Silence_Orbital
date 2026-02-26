@@ -92,7 +92,7 @@ class SpaceStationGame:
                 print(f"💥 {alien.name} attaque le mur! (-{damage} PV)")
             else:
                 alive_players = []
-                for i in self.player:
+                for i in self.players:
                     if i.is_alive:
                         alive_players.append(i)   
             if alive_players:
@@ -135,9 +135,9 @@ class SpaceStationGame:
             print("Aucun extraterrestre à attaquer")
             return
         
-        print("Choisissez unz cible:")
-        for i in alive_aliens:
-            print(f"{i}.{alive_aliens}")
+        print("Choisissez une cible:")
+        for i in range(len(alive_aliens)):
+            print(f"{i+1}.{alive_aliens[i].get_info()}")
         try:
             choice=int(input("Votre choix:"))-1
             target = alive_aliens[choice]
@@ -160,7 +160,11 @@ class SpaceStationGame:
             print("GAME OVER! La station a été détruite!")
             return True
         
-        if not any(p.is_alive for p in self.player):
+        alive_players = []
+        for i in self.players:
+            if i.is_alive:
+                alive_players.append(i)
+        if not alive_players:
             self.game_over=True
             self.victory=False
             print("GAME OVER! Tout l'equipage est mort!")
@@ -184,17 +188,16 @@ class SpaceStationGame:
         self.current_round += 1
         self.spawn_aliens()
         self.display_status()
-        for player in self.player:
+        for player in self.players:
             if player.is_alive:
                 self.player_turn(player)
         self.aliens_attack()
-
         self.station.loss_oxygen()
-        print(f"L'ocygen diminue. Niveau actuel:{self.station.oxygen_level}%")
+        print(f"L'oxygène diminue. Niveau actuel:{self.station.oxygen_level}%")
 
         if self.station.oxygen_level<50:
             print("ALERTE OXYGENE BAS!")
-            for player in self.player:
+            for player in self.players:
                 if player.is_alive:
                     damage = player.oxygen_damage()
                     if damage>0:
@@ -211,7 +214,7 @@ class SpaceStationGame:
         self.spawn_aliens()
         self.display_status()
 
-        for player in self.player:
+        for player in self.players:
             if player.is_alive:
                 self.player_turn(player)
         
@@ -221,7 +224,7 @@ class SpaceStationGame:
 
         if self.station.oxygen_level < 50:
             print("ALERTE OXYGENE BAS!")
-            for player in self.player:
+            for player in self.players:
                 if player.is_alive:
                     damage = player.oxygen_damage()
                     if damage > 0:
@@ -248,9 +251,7 @@ class SpaceStationGame:
         while not self.game_over:
             game_over = self.play_round()
             if not game_over:
-                input("\n⏸️  Appuyez sur Entrée pour la prochaine manche...")
-
-        
+                input("\nAppuyez sur Entrée pour la prochaine manche...") 
         print("\n" + "="*70)
         print("📊 RÉSUMÉ FINAL")
         print("="*70)
@@ -258,4 +259,4 @@ class SpaceStationGame:
         print(f"{self.station}")
         print("\nÉtat de l'équipage:")
         for player in self.players:
-            print(f"  {player}")
+            print(f"{player}")
