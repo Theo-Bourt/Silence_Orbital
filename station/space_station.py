@@ -1,3 +1,5 @@
+
+from character.player import *
 class SpaceStation:
 
     WALL_REINFORCEMENT=30 
@@ -9,7 +11,7 @@ class SpaceStation:
         self.oxygen_loss=5
 
     def repair_wall(self):
-        if "player" == "Engineer":
+        if PlayerClass == ENGINEER:
             self.wall_hp= self.wall_hp + 15
         else:
             self.wall_hp= self.wall_hp +10
