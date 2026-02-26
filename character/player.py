@@ -1,5 +1,3 @@
-from character.alien import Parasite
-
 class PlayerClass:
     def __init__(self, name, max_hp, attack, defense):
         self.name = name 
@@ -12,7 +10,7 @@ ENGINEER = PlayerClass("ENGINEER", max_hp=100, attack=10, defense=6)
 SOLDIER = PlayerClass("SOLDIER", max_hp=150, attack=12, defense=7)
 
 
-class Player():
+class Player:
     def __init__(self, name, player_class):
         self.name = name 
         self.player_class = player_class

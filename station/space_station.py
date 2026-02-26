@@ -1,10 +1,8 @@
 
 from character.player import *
-class SpaceStation:
+class SpaceStation: 
 
-    WALL_REINFORCEMENT=30 
-
-    def __init__(self):
+    def init(self):
         self.wall_hp=100
         self.max_wall_hp=100
         self.oxygen_level=100
@@ -15,17 +13,16 @@ class SpaceStation:
             self.wall_hp= self.wall_hp + 15
         else:
             self.wall_hp= self.wall_hp +10
-    
 
-    def damage_wall(self):
-        self.wall_hp = self.wall_hp-4
+    def damage_wall(self,damage):
+        self.wall_hp = max(0,self.wall_hp-damage)
 
-    def reinforce_wall(self):
-        self.wall_hp += self.WALL_REINFORCEMENT
-        self.max_wall_hp += self.WALL_REINFORCEMENT
+    def reinforce_wall(self,amount):
+        self.wall_hp += amount
+        self.max_wall_hp += amount
 
-    def improve_oxygen(self):
-        self.oxygen_loss=max(0,self.oxygen_loss-1)
+    def improve_oxygen(self, reduction):
+        self.oxygen_loss=max(0,self.oxygen_loss-reduction)
 
     def loss_oxygen(self):
         self.oxygen_level = max(0,self.oxygen_level-self.oxygen_loss)
@@ -35,6 +32,7 @@ class SpaceStation:
 
     def get_info_station(self):
         return f"Mur: {self.wall_hp}/{self.max_wall_hp}\nOxygène: {self.oxygen_level}% (perte: -{self.oxygen_loss}% par tour) "
+
 
     
 

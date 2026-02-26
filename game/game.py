@@ -3,6 +3,8 @@ from character.player import *
 from character.alien import *
 import random
 
+
+
 class SpaceStationGame:
     def __init__ (self, num_player, max_rounds):
         self.station = SpaceStation() 
@@ -12,7 +14,7 @@ class SpaceStationGame:
         self.max_rounds=max_rounds
         self.game_over=False
         self.victory=False
-        self._create_players(num_player)
+        self.create_players(num_player)
 
     def create_player(self, num_player):
         classes = [PlayerClass.MEDIC, PlayerClass.ENGINEER, PlayerClass.SOLDIER]
@@ -21,8 +23,9 @@ class SpaceStationGame:
             name = input(f"\nNom du joueur {i+1}: ")
             print("\nChoisissez une classe:")
 
-            for idx, cls in enumerate(classes, 1):
-                print(f"\n{idx}. {cls.value}")
+            for i, _classes_ in enumerate(classes, 1):
+                print(f"\n{i}. {_classes_.value}")
+
             choice = int(input("Votre choix")) - 1
             player = Player(name, classes[choice])
             self.player.append(player)
@@ -61,11 +64,11 @@ class SpaceStationGame:
         choice = input("Votre choix (1-3): ")
 
         if choice == "1":
-            pass
+            self.handle_resourses(player)
         elif choice == "2":
-            pass 
+            self.handle_attack 
         elif choice == "3":
-            pass 
+            self.handle_repair 
         else:
             print("Choix invalide, tour perdu!")
 
@@ -99,15 +102,8 @@ class SpaceStationGame:
                 if not target.is_alive:
                     print(f"☠️ {target.name} est mort!")
 
-from station.space_station import SpaceStation
-from character.player import *
-from character.alien import *
-class Game:
-    def __init__(self):
-        self.station= SpaceStation
-        self.player=[]
-        self.aliens=[]
-        self.curent_rounds=0
+
+
 
     def handle_resourses(self, player:Player):
         print("Choissisez une amelioration:")
@@ -207,3 +203,58 @@ class Game:
 
         return self.check_game_over()
 
+
+    def play_round(self):
+
+        self.current_round += 1
+        self.spawn_aliens()
+        self.display_status()
+
+        for player in self.player:
+            if player.is_alive:
+                self.player_turn(player)
+        
+        self.aliens_attack()
+        self.station.loss_oxygen()
+        print(f"\n L'oxygène diminue... Niveau actuel: {self.station.oxygen_level}%")
+
+        if self.station.oxygen_level < 50:
+            print("ALERTE OXYGENE BAS!")
+            for player in self.player:
+                if player.is_alive:
+                    damage = player.oxygen_damage()
+                    if damage > 0:
+                        print(f"{player.name} perd {damage} HP à cause du manque d'oxygène!")
+        
+        new_aliens = []
+
+        for alien in self.aliens:
+            if alien.is_alive:
+                new_aliens.append(alien)
+
+        self.aliens = new_aliens
+
+        return self.check_game_over()
+    
+    def start(self):
+        print("\n" + "="*70)
+        print("🚀 BIENVENUE DANS SPACE STATION SURVIVAL 🚀")
+        print("="*70)
+        print("\nVotre mission: Survivre pendant 15 manches et sauver la station!")
+        print("Attention: Le mur et l'oxygène sont critiques pour votre survie.")
+        input("\nAppuyez sur Entrée pour commencer...")
+
+        while not self.game_over:
+            game_over = self.play_round()
+            if not game_over:
+                input("\n⏸️  Appuyez sur Entrée pour la prochaine manche...")
+
+        
+        print("\n" + "="*70)
+        print("📊 RÉSUMÉ FINAL")
+        print("="*70)
+        print(f"Manches survécues: {self.current_round}/{self.max_rounds}")
+        print(f"{self.station}")
+        print("\nÉtat de l'équipage:")
+        for player in self.players:
+            print(f"  {player}")
