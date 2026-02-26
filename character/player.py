@@ -33,27 +33,38 @@ class Player:
     
 
     def oxygen_damage(self):
+
+        damage = 0
         if self.hp < 25:
-            self.hp -= 10
+            damage = 10
         elif self.hp < 50:
-            self.hp -= 5
+            damage = 5
         elif self.hp < 75:
-            self.hp -= 3
+            damage = 3
+        
+        if damage > 0:
+            self.hp -= damage
+            if self.hp <= 0:
+                self.hp = 0
+                self.is_alive = False 
+        
+        return damage 
+    
+    def repair_wall(self, station):
+        if self.player_class == ENGINEER:
+            amount = 15
+        else:
+            amount = 10
+        station.wall_hp = min(station.max_wall_hp, station.wall_hp + amount)
+        return amount 
 
     def upgrade_attack(self):
-        self.amount_attack = 3
-        self.attack = self.attack + self.amount_attack
+        self.amount_attack += 3
     
     def upgrade_defense(self): 
-        self.amount = 5
-        self.defense = self.defense + self.amount
+        self.amount += 5
     
-    def get_info(self):
-        status = self.is_alive
-        if status is not self.is_alive:
-            return "💀"
-        else :
-            "✅"
-        return f"{status} {self.name} ({self.player_class.value}) - HP: {self.hp}/{self.max_hp} | ATK: {self.attack} | DEF: {self.defense}"
-    
-    
+def get_info(self):
+    status = "✅" if self.is_alive else "💀"
+
+    return f"{status} {self.name} ({self.player_class.name}) - HP: {self.hp}/{self.max_hp} | ATK: {self.attack} | DEF: {self.defense}"
