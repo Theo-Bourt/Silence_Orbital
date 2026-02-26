@@ -3,12 +3,10 @@ from character.player import *
 from character.alien import *
 import random
 
-
-
 class SpaceStationGame:
     def __init__ (self, num_player, max_rounds):
         self.station = SpaceStation() 
-        self.player=[]
+        self.players=[]
         self.aliens=[]
         self.current_round=0
         self.max_rounds=max_rounds
@@ -16,20 +14,20 @@ class SpaceStationGame:
         self.victory=False
         self.create_players(num_player)
 
-    def create_player(self, num_player):
-        classes = [PlayerClass.MEDIC, PlayerClass.ENGINEER, PlayerClass.SOLDIER]
+    def create_players(self, num_player):
+        classes = [MEDIC, ENGINEER, SOLDIER]
 
         for i in range(num_player):
             name = input(f"\nNom du joueur {i+1}: ")
             print("\nChoisissez une classe:")
 
             for i, _classes_ in enumerate(classes, 1):
-                print(f"\n{i}. {_classes_.value}")
+                print(f"\n{i}. {_classes_.name}")
 
             choice = int(input("Votre choix")) - 1
             player = Player(name, classes[choice])
-            self.player.append(player)
-            print(f"{player.name} ({player.player_class.value}) rejoint l'équipe!")
+            self.players.append(player)
+            print(f"{player.name} ({player.player_class.name}) rejoint l'équipe!")
     
     def spawn_aliens(self):
         num_parasites = 2 + (self.current_round // 3)
@@ -45,10 +43,14 @@ class SpaceStationGame:
         print("\n" + "="*70)
         print(f"🚀 MANCHE {self.current_round}/{self.max_rounds} 🚀")
         print("="*70)
-        print(f"\n {self.station}")
+        print(f"\n {self.station.get_info_station()}")
         print("\n👥 EQUIPAGE:")
+        for player in self.players:
+            print(f"{player.get_info()}")
+        print("\n👾 ALIENS:")
         for alien in self.aliens:
-            print(f" {alien}")
+            if alien.is_alive:
+                print(f"{alien.get_info()}")
         print("="*70)
 
     def player_turn(self, player: Player):
@@ -66,9 +68,9 @@ class SpaceStationGame:
         if choice == "1":
             self.handle_resourses(player)
         elif choice == "2":
-            self.handle_attack 
+            self.handle_attack(player)
         elif choice == "3":
-            self.handle_repair 
+            self.handle_repair(player)
         else:
             print("Choix invalide, tour perdu!")
 
@@ -79,7 +81,6 @@ class SpaceStationGame:
         print("\n👾 PHASE D'ATTAQUE EXTRATERRESTRE")
 
         alive_aliens = []
-
         for i in self.aliens:
             if i.is_alive:
                 alive_aliens.append(i)
@@ -93,17 +94,14 @@ class SpaceStationGame:
                 alive_players = []
                 for i in self.player:
                     if i.is_alive:
-                        alive_players.append(i)
-            
+                        alive_players.append(i)   
             if alive_players:
                 target = random.choice(alive_players)
                 damage = target.take_damage(alien.attack)
                 print(f"💥 {alien.name} attaque {target.name}! (-{damage} HP)")
                 if not target.is_alive:
                     print(f"☠️ {target.name} est mort!")
-
-
-
+                    alive_players.remove(target)
 
     def handle_resourses(self, player:Player):
         print("Choissisez une amelioration:")
@@ -129,7 +127,10 @@ class SpaceStationGame:
             print("Choix invalide!")
 
     def handle_attack(self, player:Player):
-        alive_aliens= [a for a in self.aliens if a.is_alive]
+        alive_aliens = []
+        for i in self.aliens:
+            if i.is_alive:
+                alive_aliens.append(i)
         if not alive_aliens:
             print("Aucun extraterrestre à attaquer")
             return
