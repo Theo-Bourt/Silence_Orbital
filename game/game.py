@@ -4,7 +4,7 @@ from character.alien import *
 import random
 
 class SpaceStationGame:
-    def __init__ (self, num_player, max_rounds):
+    def __init__ (self, num_players, max_rounds):
         self.station = SpaceStation() 
         self.players=[]
         self.aliens=[]
@@ -12,19 +12,19 @@ class SpaceStationGame:
         self.max_rounds=max_rounds
         self.game_over=False
         self.victory=False
-        self.create_players(num_player)
+        self.create_players(num_players)
 
-    def create_players(self, num_player):
+    def create_players(self, num_players):
         classes = [MEDIC, ENGINEER, SOLDIER]
 
-        for i in range(num_player):
+        for i in range(num_players):
             name = input(f"\nNom du joueur {i+1}: ")
             print("\nChoisissez une classe:")
 
-            for i, _classes_ in enumerate(classes, 1):
-                print(f"\n{i}. {_classes_.name}")
+            for j, _classes_ in enumerate(classes, 1):
+                print(f"\n{j}. {_classes_.name}")
 
-            choice = int(input("Votre choix")) - 1
+            choice = int(input("Votre choix: ")) - 1
             player = Player(name, classes[choice])
             self.players.append(player)
             print(f"{player.name} ({player.player_class.name}) rejoint l'équipe!")
@@ -66,7 +66,7 @@ class SpaceStationGame:
         choice = input("Votre choix (1-3): ")
 
         if choice == "1":
-            self.handle_resourses(player)
+            self.handle_resources(player)
         elif choice == "2":
             self.handle_attack(player)
         elif choice == "3":
@@ -95,15 +95,15 @@ class SpaceStationGame:
                 for i in self.players:
                     if i.is_alive:
                         alive_players.append(i)   
-            if alive_players:
-                target = random.choice(alive_players)
-                damage = target.take_damage(alien.attack)
-                print(f"💥 {alien.name} attaque {target.name}! (-{damage} HP)")
-                if not target.is_alive:
-                    print(f"☠️ {target.name} est mort!")
-                    alive_players.remove(target)
+                if alive_players:
+                    target = random.choice(alive_players)
+                    damage = target.take_damage(alien.attack)
+                    print(f"💥 {alien.name} attaque {target.name}! (-{damage} HP)")
+                    if not target.is_alive:
+                        print(f"☠️ {target.name} est mort!")
+                        alive_players.remove(target)
 
-    def handle_resourses(self, player:Player):
+    def handle_resources(self, player:Player):
         print("Choissisez une amelioration:")
         print("1. Renforcer le mur")
         print("2. Perdre moins d'oxygene")
@@ -116,7 +116,7 @@ class SpaceStationGame:
             print(f"Mur renforcé! Nouveau maximum: {self.station.max_wall_hp}")
         elif choice =="2":
             self.station.improve_oxygen(1)
-            print(f"Système amélioré! Perte d'oxygene réduite à {self.station.loss_oxygen} par tour")
+            print(f"Système amélioré! Perte d'oxygene réduite à {self.station.oxygen_loss} par tour")
         elif choice=="3":
             player.upgrade_attack()
             print(f"Attaque augmentée! Nouvelle attaque : {player.attack}")
@@ -184,29 +184,6 @@ class SpaceStationGame:
         
         return False
     
-    def play_round(self):
-        self.current_round += 1
-        self.spawn_aliens()
-        self.display_status()
-        for player in self.players:
-            if player.is_alive:
-                self.player_turn(player)
-        self.aliens_attack()
-        self.station.loss_oxygen()
-        print(f"L'oxygène diminue. Niveau actuel:{self.station.oxygen_level}%")
-
-        if self.station.oxygen_level<50:
-            print("ALERTE OXYGENE BAS!")
-            for player in self.players:
-                if player.is_alive:
-                    damage = player.oxygen_damage()
-                    if damage>0:
-                        print(f"{player.name} perd {damage} HP à cause du manque d'oxygène!")
-
-        self.aliens = [a for a in self.aliens if a.is_alive]
-
-        return self.check_game_over()
-
 
     def play_round(self):
 
@@ -256,7 +233,7 @@ class SpaceStationGame:
         print("📊 RÉSUMÉ FINAL")
         print("="*70)
         print(f"Manches survécues: {self.current_round}/{self.max_rounds}")
-        print(f"{self.station}")
+        print(f"{self.station.get_info_station()}")
         print("\nÉtat de l'équipage:")
         for player in self.players:
-            print(f"{player}")
+            print(f"{player.get_info_station()}")

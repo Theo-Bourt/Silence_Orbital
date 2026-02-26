@@ -2,7 +2,7 @@ from character.player import ENGINEER
 
 class SpaceStation: 
 
-    def init(self):
+    def __init__(self):
         self.wall_hp=100
         self.max_wall_hp=100
         self.oxygen_level=100

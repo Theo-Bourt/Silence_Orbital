@@ -50,6 +50,11 @@ class Player:
         
         return damage 
     
+    def attack_alien(self, alien):
+        damage = self.attack
+        alien.take_damage(damage)
+        return damage
+
     def repair_wall(self, station):
         if self.player_class == ENGINEER:
             amount = 15
@@ -59,12 +64,12 @@ class Player:
         return amount 
 
     def upgrade_attack(self):
-        self.amount_attack += 3
+        self.attack += 3
     
     def upgrade_defense(self): 
-        self.amount += 5
+        self.defense += 5
     
-def get_info(self):
-    status = "✅" if self.is_alive else "💀"
+    def get_info(self):
+        status = "✅" if self.is_alive else "💀"
 
-    return f"{status} {self.name} ({self.player_class.name}) - HP: {self.hp}/{self.max_hp} | ATK: {self.attack} | DEF: {self.defense}"
+        return f"{status} {self.name} ({self.player_class.name}) - HP: {self.hp}/{self.max_hp} | ATK: {self.attack} | DEF: {self.defense}"
