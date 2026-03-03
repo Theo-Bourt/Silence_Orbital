@@ -17,9 +17,13 @@ class Alien :
         return f"{self.name} (HP: {self.hp}/{self.max_hp}, ATK: {self.attack})"
     
 class Parasite(Alien):
+    count=0
     def __init__(self):
-        super().__init__("Parasite", 20, 4)
+        Parasite.count+=1
+        super().__init__(f"Parasite #{Parasite.count}", 20, 4)
 
 class Dominant(Alien):
+    count=0
     def __init__(self):
-        super().__init__("Dominant", 60, 12)
+        Dominant.count+=1
+        super().__init__(f"Dominant #{Dominant.count}", 60, 12)
