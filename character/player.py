@@ -65,14 +65,6 @@ class Player:
         alien.take_damage(damage)
         return damage
 
-    def repair_wall(self, station):
-        if self.player_class == ENGINEER:
-            amount = 15
-        else:
-            amount = 10
-        station.wall_hp = min(station.max_wall_hp, station.wall_hp + amount)
-        return amount 
-
     def upgrade_attack(self):
         self.attack += 3
     

@@ -190,7 +190,7 @@ class SpaceStationGame:
                 break
 
     def handle_repair(self,player:Player):
-        amount = player.repair_wall(self.station)
+        amount = self.station.repair_wall(player.player_class)
         print(f"{player.name} répare le mur de {amount} PV!")
         print(f"Mur: {self.station.wall_hp}/{self.station.max_wall_hp}")
 

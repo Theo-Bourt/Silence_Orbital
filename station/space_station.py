@@ -7,12 +7,14 @@ class SpaceStation:
         self.max_wall_hp=100
         self.oxygen_level=100
         self.oxygen_loss=5
-
+        
     def repair_wall(self, player_class):
         if player_class == ENGINEER:
-            self.wall_hp= min(self.max_wall_hp, self.wall_hp + 15)
+            amount = 15
         else:
-            self.wall_hp= min(self.max_wall_hp, self.wall_hp + 10)
+            amount = 10
+        self.wall_hp = min(self.max_wall_hp, self.wall_hp + amount)
+        return amount 
 
     def damage_wall(self,damage):
         self.wall_hp = max(0,self.wall_hp - damage)
