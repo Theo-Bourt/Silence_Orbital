@@ -1,13 +1,14 @@
 class PlayerClass:
-    def __init__(self, name, max_hp, attack, defense):
+    def __init__(self, name, max_hp, attack, defense,heal_amount):
         self.name = name 
         self.max_hp = max_hp 
         self.attack = attack
         self.defense = defense
+        self.heal_amount= heal_amount
     
-MEDIC = PlayerClass("MEDIC", max_hp=120, attack=8, defense=5)
-ENGINEER = PlayerClass("ENGINEER", max_hp=100, attack=10, defense=6)
-SOLDIER = PlayerClass("SOLDIER", max_hp=150, attack=12, defense=7)
+MEDIC = PlayerClass("MEDIC", max_hp=80, attack=18, defense=2, heal_amount=8)
+ENGINEER = PlayerClass("ENGINEER", max_hp=70, attack=22, defense=3, heal_amount=4)
+SOLDIER = PlayerClass("SOLDIER", max_hp=100, attack=28, defense=4, heal_amount=2)
 
 
 class Player:
@@ -20,6 +21,7 @@ class Player:
         self.defense = player_class.defense
         self.oxygen = 100 
         self.is_alive = True 
+        self.attacked_this_turn=False
     
     def take_damage(self, damage):
         actual_damage = max(1, damage - self.defense)
@@ -31,6 +33,14 @@ class Player:
         
         return actual_damage
     
+    def heal(self):
+        amount=self.player_class.heal_amount
+        self.hp = min(self.max_hp, self.hp + amount)
+        return amount
+    
+    def upgrade_heal(self):
+        self.player_class.heal_amount+=3
+        print(f"Soin pasif amélioré! Nouveau soin:+{self.player_class.heal_amount} HP/tour ( si vous n'attaquez pas)")
 
     def oxygen_damage(self):
 
