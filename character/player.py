@@ -40,7 +40,6 @@ class Player:
     
     def upgrade_heal(self):
         self.player_class.heal_amount+=3
-        print(f"Soin pasif amélioré! Nouveau soin:+{self.player_class.heal_amount} HP/tour ( si vous n'attaquez pas)")
 
     def oxygen_damage(self):
 
