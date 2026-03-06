@@ -182,7 +182,6 @@ class SpaceStationGame:
             target.take_damage(damage_remaining)
 
             if not target.is_alive:
-                print(f"{target.name} éliminé!")
                 damage_remaining=damage_remaining-overflow
                 print(f"{target.name} éliminé!({damage_remaining} dégats en surplus)")
                 new_aliens=[]
@@ -288,10 +287,11 @@ class SpaceStationGame:
         if not self.game_over:
             print("\n" + "=" * 70)
             print("❤️  ÉTAT DE L'ÉQUIPAGE EN FIN DE MANCHE:")
-            bar_filled = int((player.hp/player.max_hp)*20)
-            bar= "█" * bar_filled + "·"*(20-bar_filled)
-            status = "✅" if player.is_alive else "💀"
-            print(f"{status} {player.name} [{bar}]  {player.hp}/{player.max_hp} HP")
+            for player in self.players:
+                bar_filled = int((player.hp/player.max_hp)*20)
+                bar= "█" * bar_filled + "·"*(20-bar_filled)
+                status = "✅" if player.is_alive else "💀"
+                print(f"{status} {player.name} [{bar}]  {player.hp}/{player.max_hp} HP")
             print("\n" + "=" * 70)
     
     def start(self):

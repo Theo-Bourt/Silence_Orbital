@@ -22,6 +22,7 @@ class Player:
         self.oxygen = 100 
         self.is_alive = True 
         self.attacked_this_turn=False
+        self.heal_amount=player_class.heal_amount
     
     def take_damage(self, damage):
         actual_damage = max(1, damage - self.defense)
@@ -34,12 +35,11 @@ class Player:
         return actual_damage
     
     def heal(self):
-        amount=self.player_class.heal_amount
-        self.hp = min(self.max_hp, self.hp + amount)
-        return amount
+        self.hp = min(self.max_hp, self.hp + self.heal_amount)
+        return self.heal_amount
     
     def upgrade_heal(self):
-        self.player_class.heal_amount+=3
+        self.heal_amount+=3
 
     def oxygen_damage(self):
 
