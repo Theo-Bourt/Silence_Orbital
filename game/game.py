@@ -37,19 +37,36 @@ class SpaceStationGame:
             print(f"{player.name} ({player.player_class.name}) rejoint l'équipe!")
     
     def spawn_aliens(self):
-        new_aliens=[]
-        for alien in self.aliens:
-            if alien.is_alive:
-                new_aliens.append(alien)
-        self.aliens = new_aliens
-        num_parasites = min(1 + (self.current_round // 4),8)*len(self.players)
-        num_dominants = min(max(0,(self.current_round-4)//4),4)*len(self.players)
 
-        for i in range(num_parasites):
-            self.aliens.append(Parasite())
+        new_aliens = []
+        for a in self.aliens:
+            if a.is_alive:
+                new_aliens.append(a)
+        self.aliens = new_aliens
+
+        n = len(self.players)
+
+        if n == 1:
+            parasite_count = 2
+            dominant_count = 1
+        elif n == 2:
+            parasite_count = 4
+            dominant_count = 2
+        elif n == 3:
+            parasite_count = 6
+            dominant_count = 2
+        else:  
+            parasite_count = 8
+            dominant_count = 4
+
         
-        for i in range(num_dominants):
-            self.aliens.append(Dominant())
+        if self.current_round % 5 == 0:
+            for a in range(dominant_count):
+                self.aliens.append(Dominant())
+        
+        elif self.current_round % 2 == 1:
+            for a in range(parasite_count):
+                self.aliens.append(Parasite())
     
     def display_status(self):
         print("\n" + "="*70)
