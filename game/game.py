@@ -211,19 +211,6 @@ class SpaceStationGame:
             target.take_damage(damage_remaining)
 
             if not target.is_alive:
-              #Lola1.6
-                damage_remaining=damage_remaining-overflow
-                print(f"{target.name} éliminé!({damage_remaining} dégats en surplus)")
-                new_aliens=[]
-                for alien in self.aliens:
-                    if alien.is_alive:
-                        new_aliens.append(alien)
-                self.aliens =new_aliens
-
-                if damage_remaining>0 and self.aliens:
-                    target=self.aliens[0]
-                    print(f"Les dégats en surplus s'appliquent à {target.name}!")
-#
                 surplus = damage_remaining - hp_before
                 
                 new_aliens = []
