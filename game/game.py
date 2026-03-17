@@ -221,7 +221,6 @@ class SpaceStationGame:
                 if surplus > 0 and self.aliens:
                     print(f"💀 {target.name} éliminé! ({surplus} dégâts en surplus)")
                     print(f"⚡ Il vous reste {surplus} dégâts à distribuer!")
-                    #main
                 else:
                     print(f"💀 {target.name} éliminé!")
                 damage_remaining = surplus
