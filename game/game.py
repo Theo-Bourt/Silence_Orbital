@@ -37,19 +37,36 @@ class SpaceStationGame:
             print(f"{player.name} ({player.player_class.name}) rejoint l'équipe!")
     
     def spawn_aliens(self):
-        new_aliens=[]
-        for alien in self.aliens:
-            if alien.is_alive:
-                new_aliens.append(alien)
-        self.aliens = new_aliens
-        num_parasites = min(1 + (self.current_round // 4),8)*len(self.players)
-        num_dominants = min(max(0,(self.current_round-4)//4),4)*len(self.players)
 
-        for i in range(num_parasites):
-            self.aliens.append(Parasite())
+        new_aliens = []
+        for a in self.aliens:
+            if a.is_alive:
+                new_aliens.append(a)
+        self.aliens = new_aliens
+
+        n = len(self.players)
+
+        if n == 1:
+            parasite_count = 2
+            dominant_count = 1
+        elif n == 2:
+            parasite_count = 4
+            dominant_count = 2
+        elif n == 3:
+            parasite_count = 6
+            dominant_count = 2
+        else:  
+            parasite_count = 8
+            dominant_count = 4
+
         
-        for i in range(num_dominants):
-            self.aliens.append(Dominant())
+        if self.current_round % 5 == 0:
+            for a in range(dominant_count):
+                self.aliens.append(Dominant())
+        
+        elif self.current_round % 2 == 1:
+            for a in range(parasite_count):
+                self.aliens.append(Parasite())
     
     def display_status(self):
         print("\n" + "="*70)
@@ -154,34 +171,47 @@ class SpaceStationGame:
             player.upgrade_heal()
             print(f"Soin pasif amélioré! Nouveau soin:+{player.player_class.heal_amount} HP/tour ( si vous n'attaquez pas)")
 
-    def handle_attack(self, player:Player):
+    def handle_attack(self, player: Player):
         alive_aliens = []
-        for i in self.aliens:
-            if i.is_alive:
-                alive_aliens.append(i)
+        for a in self.aliens:
+            if a.is_alive:
+                alive_aliens.append(a)
         if not alive_aliens:
-            print("Aucun extraterrestre à attaquer")
+            print("Aucun extraterrestre à attaquer.")
             return
-        
-        print("Choisissez une cible:")
-        for i in range(len(alive_aliens)):
-            print(f"{i+1}.{alive_aliens[i].get_info()}")
-        choice=-1
-        while not 0<=choice<len(alive_aliens):
-            try:
-                choice=int(input("Votre choix:"))-1
-                if not 0<=choice<len(alive_aliens):
-                    print(f"Choix invalide. Choisissez un nombre entre 1 et {len(alive_aliens)}")
-            except (ValueError, IndexError):
-                print("Veuillez entrer un nombre valide")
 
-        damage_remaining=player.attack
-        target = alive_aliens[choice]
-        while damage_remaining>0:
-            overflow=target.hp
+        damage_remaining = player.attack
+
+        while damage_remaining > 0:
+            new_aliens = []
+            for a in self.aliens:
+                if a.is_alive:
+                    new_aliens.append(a)
+            self.aliens = new_aliens
+            if not self.aliens:
+                print("Tous les aliens ont été éliminés!")
+                break
+
+            print("\nChoisissez une cible:")
+            for i in range(len(self.aliens)):
+                print(f"  {i+1}. {self.aliens[i].get_info()}")
+
+            choice = -1
+            while not 0 <= choice < len(self.aliens):
+                try:
+                    choice = int(input("Votre choix: ")) - 1
+                    if not 0 <= choice < len(self.aliens):
+                        print(f"Choix invalide. Choisissez entre 1 et {len(self.aliens)}")
+                except ValueError:
+                    print("Veuillez entrer un nombre valide")
+
+            target = self.aliens[choice]
+            hp_before = target.hp
+
             target.take_damage(damage_remaining)
 
             if not target.is_alive:
+              #Lola1.6
                 damage_remaining=damage_remaining-overflow
                 print(f"{target.name} éliminé!({damage_remaining} dégats en surplus)")
                 new_aliens=[]
@@ -193,10 +223,24 @@ class SpaceStationGame:
                 if damage_remaining>0 and self.aliens:
                     target=self.aliens[0]
                     print(f"Les dégats en surplus s'appliquent à {target.name}!")
+#
+                surplus = damage_remaining - hp_before
+                
+                new_aliens = []
+                for a in self.aliens:
+                    if a.is_alive:
+                        new_aliens.append(a)
+                self.aliens = new_aliens
+                if surplus > 0 and self.aliens:
+                    print(f"💀 {target.name} éliminé! ({surplus} dégâts en surplus)")
+                    print(f"⚡ Il vous reste {surplus} dégâts à distribuer!")
+                    #main
                 else:
-                    break
+                    print(f"💀 {target.name} éliminé!")
+                damage_remaining = surplus
             else:
-                print(f"{player.name} mets {damage_remaining} dégâts à {target.name}!")
+                print(f"⚔️  {player.name} inflige {damage_remaining} dégâts à {target.name}! "
+                        f"(HP restants: {target.hp}/{target.max_hp})")
                 break
 
     def handle_repair(self,player:Player):
