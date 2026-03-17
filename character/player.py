@@ -6,8 +6,8 @@ class PlayerClass:
         self.defense = defense
         self.heal_amount= heal_amount
     
-MEDIC = PlayerClass("MEDIC", max_hp=120, attack=8, defense=5, heal_amount=8)
-ENGINEER = PlayerClass("ENGINEER", max_hp=100, attack=10, defense=6, heal_amount=4)
+MEDIC = PlayerClass("MEDIC", max_hp=120, attack=8, defense=5, heal_amount=3)
+ENGINEER = PlayerClass("ENGINEER", max_hp=100, attack=10, defense=6, heal_amount=1)
 SOLDIER = PlayerClass("SOLDIER", max_hp=150, attack=12, defense=7, heal_amount=2)
 
 

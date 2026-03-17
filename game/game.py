@@ -325,11 +325,6 @@ class SpaceStationGame:
             print("\n" + "=" * 70)
     
     def start(self):
-        print("\n" + "="*70)
-        print("🚀 BIENVENUE DANS SPACE STATION SURVIVAL 🚀")
-        print("="*70)
-        print("\nVotre mission: Survivre pendant 15 manches et sauver la station!")
-        print("Attention: Le mur et l'oxygène sont critiques pour votre survie.")
         input("\nAppuyez sur Entrée pour commencer...")
 
         while not self.game_over:
