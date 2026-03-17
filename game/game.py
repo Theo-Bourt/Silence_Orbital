@@ -21,7 +21,7 @@ class SpaceStationGame:
             name = input(f"\nNom du joueur {i+1}: ")
             print("\nChoisissez une classe:")
             for j in range (len(classes)):
-                print(f"\n{j+1}. {classes[j].name}")
+                print(f"\n{j+1}. {classes[j].name} (HP:{classes[j].max_hp} ATK:{classes[j].attack} DEF:{classes[j].defense} Soin:{classes[j].heal_amount})")
 
             choice=-1
             while not 0<= choice <len(classes):
@@ -85,25 +85,28 @@ class SpaceStationGame:
     def player_turn(self, player: Player):
         if not player.is_alive:
             return
-        
+        player.attacked_this_turn = False
         print(f"\n🎮 Tour de {player.name}")
         print("Choisissez une action:")
         print("1. Ressources (améliorer une faculté)")
         print("2. Attaquer les extraterrestres")
         print("3. Réparer le mur")
+        print("4. Se soigner (repos)")
 
         choice=""
-        while choice not in("1","2","3"):
-            choice = input("Votre choix (1-3): ")
-            if choice not in("1","2","3"):
-                print("Choix invalide. Entrez un nombre entre 1 et 3")
+        while choice not in("1","2","3","4"):
+            choice = input("Votre choix (1-4): ")
+            if choice not in("1","2","3","4"):
+                print("Choix invalide. Entrez un nombre entre 1 et 4")
 
         if choice == "1":
             self.handle_resources(player)
         elif choice == "2":
             self.handle_attack(player)
         elif choice == "3":
-            self.handle_repair(player)     
+            self.handle_repair(player)
+        elif choice == "4":
+            self.handle_rest(player)
 
     def aliens_attack(self):
         if not self.aliens:
@@ -134,18 +137,23 @@ class SpaceStationGame:
                         print(f"☠️ {target.name} est mort!")
                         alive_players.remove(target)
 
+    def handle_rest(self,player:Player):
+        healed = player.heal()
+        print(f"{player.name} se repose et récupère {healed} HP! (HP:{player.hp}/{player.max_hp})")
+
     def handle_resources(self, player:Player):
         print("\nChoissisez une amelioration:")
         print("1. Renforcer le mur")
         print("2. Perdre moins d'oxygene")
         print("3. Améliorer l'attaque")
         print("4. Améliorer la défense")
+        print("5. Améliorer le soin passif (repos)")
 
         choice=""
-        while choice not in("1","2","3","4"):
-            choice = input("Votre choix (1-4): ")
-            if choice not in("1","2","3","4"):
-                print("Choix invalide. Entrez un nombre entre 1 et 4")
+        while choice not in("1","2","3","4","5"):
+            choice = input("Votre choix (1-5): ")
+            if choice not in("1","2","3","4","5"):
+                print("Choix invalide. Entrez un nombre entre 1 et 5")
 
         if choice=="1":
             self.station.reinforce_wall(30)
@@ -159,6 +167,9 @@ class SpaceStationGame:
         elif choice =="4":
             player.upgrade_defense()
             print(f"Défense augmentée ! Nouvelle défense: {player.defense}")
+        elif choice=="5":
+            player.upgrade_heal()
+            print(f"Soin pasif amélioré! Nouveau soin:+{player.player_class.heal_amount} HP/tour ( si vous n'attaquez pas)")
 
     def handle_attack(self, player: Player):
         alive_aliens = []
@@ -200,6 +211,19 @@ class SpaceStationGame:
             target.take_damage(damage_remaining)
 
             if not target.is_alive:
+              #Lola1.6
+                damage_remaining=damage_remaining-overflow
+                print(f"{target.name} éliminé!({damage_remaining} dégats en surplus)")
+                new_aliens=[]
+                for alien in self.aliens:
+                    if alien.is_alive:
+                        new_aliens.append(alien)
+                self.aliens =new_aliens
+
+                if damage_remaining>0 and self.aliens:
+                    target=self.aliens[0]
+                    print(f"Les dégats en surplus s'appliquent à {target.name}!")
+#
                 surplus = damage_remaining - hp_before
                 
                 new_aliens = []
@@ -210,6 +234,7 @@ class SpaceStationGame:
                 if surplus > 0 and self.aliens:
                     print(f"💀 {target.name} éliminé! ({surplus} dégâts en surplus)")
                     print(f"⚡ Il vous reste {surplus} dégâts à distribuer!")
+                    #main
                 else:
                     print(f"💀 {target.name} éliminé!")
                 damage_remaining = surplus
@@ -219,7 +244,7 @@ class SpaceStationGame:
                 break
 
     def handle_repair(self,player:Player):
-        amount = player.repair_wall(self.station)
+        amount = self.station.repair_wall(player.player_class)
         print(f"{player.name} répare le mur de {amount} PV!")
         print(f"Mur: {self.station.wall_hp}/{self.station.max_wall_hp}")
 
@@ -288,6 +313,11 @@ class SpaceStationGame:
                     if damage > 0:
                         print(f"{player.name} perd {damage} HP à cause du manque d'oxygène!")
         
+        for player in self.players:
+            if player.is_alive and not player.attacked_this_turn:
+                healed =player.heal()
+                if healed >0:
+                    print(f"{player.name} récupère {healed} HP (repos passif). HP: {player.hp}/{player.max_hp}")
         new_aliens = []
 
         for alien in self.aliens:
@@ -297,6 +327,16 @@ class SpaceStationGame:
         self.aliens = new_aliens
 
         self.check_game_over()
+
+        if not self.game_over:
+            print("\n" + "=" * 70)
+            print("❤️  ÉTAT DE L'ÉQUIPAGE EN FIN DE MANCHE:")
+            for player in self.players:
+                bar_filled = int((player.hp/player.max_hp)*20)
+                bar= "█" * bar_filled + "·"*(20-bar_filled)
+                status = "✅" if player.is_alive else "💀"
+                print(f"{status} {player.name} [{bar}]  {player.hp}/{player.max_hp} HP")
+            print("\n" + "=" * 70)
     
     def start(self):
         print("\n" + "="*70)
